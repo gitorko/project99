@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: project99
+  main:
+    banner-mode: "off"
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-main.yaml
+    contexts: primary,secondary
+  datasource:
+    primary:
+      driver-class-name: org.postgresql.Driver
+      host: localhost
+      url: jdbc:postgresql://localhost:5432/test-db
+      username: test
+      password: test@123
+      hikari:
+        connection-timeout: 60000
+        maximum-pool-size: 5
+        idle-timeout: 30000
+        pool-name: SpringBootHikariCP
+        minimum-idle: 3
+        max-lifetime: 1800000
+        connection-test-query: SELECT 1
+        auto-commit: true
+    secondary:
+      driver-class-name: org.postgresql.Driver
+      host: localhost
+      url: jdbc:postgresql://localhost:5432/test-readonly
+      username: test
+      password: test@123
+      hikari:
+        connection-timeout: 60000
+        maximum-pool-size: 5
+        idle-timeout: 30000
+        pool-name: SpringBootHikariCP
+        minimum-idle: 3
+        max-lifetime: 1800000
+        connection-test-query: SELECT 1
+        auto-commit: true
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: none
+  batch:
+    jdbc:
+      initialize-schema: never
+  threads:
+    virtual:
+      enabled: true
+logging:
+  level:
+    root: info
+#    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
