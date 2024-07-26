@@ -1,0 +1,19 @@
+services:
+  source-setup:
+    image: alpine:latest
+    container_name: source-setup
+    entrypoint: >
+      /bin/sh -c "
+      apk --no-cache add postgresql-client &&
+      until pg_isready -h pg-source -U test -d source_db; do
+        echo 'Waiting for source database to be ready...';
+        sleep 2;
+      done;
+      PGPASSWORD=test@123 psql -h pg-source -U test -d source_db -c \"
+      CREATE ROLE replicator WITH REPLICATION PASSWORD 'replicator_password' LOGIN;
+      GRANT USAGE ON SCHEMA public TO replicator;
+      GRANT SELECT ON ALL TABLES IN SCHEMA public TO replicator;
+      ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO replicator;
+      CREATE PUBLICATION employee_publication FOR TABLE employee;
+      \";
+      "

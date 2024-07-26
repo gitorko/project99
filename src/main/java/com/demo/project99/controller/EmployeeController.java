@@ -17,12 +17,12 @@ public class EmployeeController {
 
     final EmployeeService employeeService;
 
-    @PostMapping
+    @PostMapping("/employee")
     public EmployeeWrite createEmployee(@RequestBody EmployeeWrite employeeWrite) {
         return employeeService.saveEmployee(employeeWrite);
     }
 
-    @GetMapping
+    @GetMapping("/employee")
     public List<EmployeeRead> getAllEmployees() {
         return employeeService.getAllEmployees();
     }

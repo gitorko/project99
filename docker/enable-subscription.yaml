@@ -1,0 +1,17 @@
+services:
+  target-setup:
+    image: alpine:latest
+    container_name: target-setup
+    entrypoint: >
+      /bin/sh -c "
+      apk --no-cache add postgresql-client &&
+      until pg_isready -h pg-target -U test -d target_db; do
+        echo 'Waiting for target database to be ready...';
+        sleep 2;
+      done;
+      PGPASSWORD=test@123 psql -h pg-target -U test -d target_db -c \"
+      CREATE SUBSCRIPTION employee_subscription
+      CONNECTION 'host=pg-source port=5432 dbname=source_db user=replicator password=replicator_password'
+      PUBLICATION employee_publication;
+      \";
+      "

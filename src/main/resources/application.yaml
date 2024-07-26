@@ -5,12 +5,11 @@ spring:
     banner-mode: "off"
   liquibase:
     change-log: classpath:db/changelog/db.changelog-main.yaml
-    contexts: primary,secondary
   datasource:
     primary:
       driver-class-name: org.postgresql.Driver
       host: localhost
-      url: jdbc:postgresql://localhost:5432/test-db
+      url: jdbc:postgresql://localhost:5432/source_db
       username: test
       password: test@123
       hikari:
@@ -25,7 +24,7 @@ spring:
     secondary:
       driver-class-name: org.postgresql.Driver
       host: localhost
-      url: jdbc:postgresql://localhost:5432/test-readonly
+      url: jdbc:postgresql://localhost:5433/target_db
       username: test
       password: test@123
       hikari:
@@ -40,14 +39,10 @@ spring:
   jpa:
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate.ddl-auto: none
-  batch:
-    jdbc:
-      initialize-schema: never
+    hibernate.ddl-auto: validate
   threads:
     virtual:
       enabled: true
 logging:
   level:
     root: info
-#    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
